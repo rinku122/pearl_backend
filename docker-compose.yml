@@ -1,32 +1,5 @@
 version: "2.0"
 services:
-  # mysql-server:
-  #   image: mysql:8.0.19
-  #   container_name: mysql_container
-  #   restart: on-failure
-  #   command: --default-authentication-plugin=mysql_native_password
-  #   environment:
-  #     - MYSQL_ROOT_PASSWORD=admin123
-  #     - MYSQL_USER=root
-  #     - MYSQL_PASSWORD=admin123
-  #   volumes:
-  #     - mysql-data:/var/lib/mysql
-  #   ports:
-  #     - '0.0.0.0:3306:3306'
-    # networks:
-    #   - zel_network
-  # phpmyadmin:
-  #   container_name: phpmyadmin_container
-  #   image: phpmyadmin/phpmyadmin:5.0.1
-  #   restart: on-failure
-  #   environment:
-  #     PMA_HOST: mysql-server
-  #     # PMA_USER: root
-  #     # PMA_PASSWORD: secret
-  #   ports:
-  #     - '0.0.0.0:8084:80'
-    # networks:
-    #   - zel_network
   redis:
     container_name: redis_c
     ports:
@@ -34,151 +7,24 @@ services:
     volumes: 
       - ./data:/data
     image: redis
-    # command: ["redis-server", "--requirepass","redis123", "--bind", "redis", "--port", "6379"]
     environment:
       - REDIS_REPLICATION_MODE=master
-    # networks: 
-    #   zel_network:
-    #     ipv4_address: 172.18.18.15
-  # rabbitmq:
-  #   container_name: rabbitmq_c
-  #   # image: rabbitmq:3-management-alpine
-  #   image: rabbitmq:3-management
-  #   command: rabbitmq-server
-  #   volumes:
-  #     - docker-etc:/etc/rabbitmq/
-  #     - docker-data:/var/lib/rabbitmq/
-  #     - docker-logs:/var/log/rabbitmq/
-    # environment:
-    #   RABBITMQ_ERLANG_COOKIE: rabbit_cook
-    #   RABBITMQ_DEFAULT_USER: admin
-    #   RABBITMQ_DEFAULT_PASS: admin123
-    # ports:
-    #   - '0.0.0.0:15672:15672'
-    #   - '0.0.0.0:5672:5672'
-    # networks:
-    #   zel_network:
-    #     ipv4_address: 172.18.18.14
-  # gateway_s:
-  #   hostname: api-gateway
-  #   ports:
-  #     - '0.0.0.0:8080:8080'
-  #   container_name: gateway_c
-  #   build: ./api_gateway/
-  #   restart: on-failure
-    # networks: 
-    #   zel_network:
-    #     ipv4_address: 172.18.18.8
-  # wallet_s:
-    # depends_on:
-    #   - mysql-server
-    # ports:
-    #   - '0.0.0.0:6100:6100'
-    # container_name: wallet_c
-    # restart: on-failure
-    # build: ./wallet/wallet_service/
-    # env_file: ./config/wallet/wallet_main_service.env
-    # environment:
-    #   - NODE_ENV=live
-    # networks:
-    #   zel_network:
-    #     ipv4_address: 172.18.18.9
-  # btc_s:
-  #   # depends_on:
-  #   #   - mysql-server
-  #   container_name: btc_c
-  #   ports: 
-  #     - '0.0.0.0:6001:6001'
-  #   build: ./wallet/wallet_btc_fullnode/
-  #   restart: on-failure
-  #   env_file: ./config/wallet/fullnode/btc.env
-  #   environment: 
-  #     - NODE_ENV=live
-  #   networks: 
-  #     zel_network:
-  #       ipv4_address: 172.18.18.10
-  # eth_s:
-  #   # depends_on:
-  #   #   - mysql-server
-  #   container_name: eth_c
-  #   ports: 
-  #     - '0.0.0.0:6008:6008'
-  #   build: ./wallet/wallet_eth_fullnode/
-  #   restart: on-failure
-  #   env_file: ./config/wallet/fullnode/eth.env
-  #   environment: 
-  #     - NODE_ENV=live
-    # networks: 
-    #   zel_network:
-    #     ipv4_address: 172.18.18.11
-  # xmr_s:
-  #   depends_on:
-  #     - mysql-server
-  #   container_name: xmr_c
-  #   ports: 
-  #     - '0.0.0.0:6012:6012'
-  #   build: ./wallet/wallet_xmr_fullnode/
-  #   restart: on-failure
-  #   env_file: ./config/wallet/fullnode/xmr.env
-  #   environment: 
-  #     - NODE_ENV=stage
-  #   networks: 
-  #     zel_network:
-  #       ipv4_address: 172.18.18.12
-  # user_s:
-  #   # depends_on:
-  #   #   - mysql-server
-  #   container_name: user_c
-  #   ports: 
-  #     - '0.0.0.0:3000:3000'
-  #   build: ./users_service_backend/
-  #   restart: on-failure
-  #   env_file: ./config/users/user.env
-  #   environment: 
-  #     - NODE_ENV=live
-    # networks: 
-    #   zel_network:
-    #     ipv4_address: 172.18.18.13
-  # buysell:
-  #   # depends_on:
-  #   #   - mysql-server
-  #   container_name: buysell_c
-  #   ports: 
-  #     - '0.0.0.0:3001:3001'
-  #   build: ./buy_sell/
-  #   restart: on-failure
-  #   env_file: ./config/buysell/buysell.env
-  #   environment: 
-  #     - NODE_ENV=live
-    # networks: 
-    #   zel_network:
-    #     ipv4_address: 172.18.18.16
-  # email_service:
-  #   depends_on:
-  #     - mysql-server
-  #   container_name: email_c
-  #   ports: 
-  #     - '0.0.0.0:8250:8250'
-  #   build: ./email_service/
-  #   restart: on-failure
-  #   env_file: ./config/email/email.env
-  #   environment: 
-  #     - NODE_ENV=stage
-    # networks: 
-    #   zel_network:
-    #     ipv4_address: 172.18.18.17
-# volumes:
-#   mysql-data:
-#   docker-etc:
-#   docker-data:
-#   docker-logs:
-#   docker-redis:
-# networks: 
-#   zel_network:
-#     driver: bridge
-#     driver_opts:
-#       com.docker.network.enable_ipv6: "false"
-#     ipam:
-#       config:  
-#         - subnet: 172.18.18.0/24
-#           gateway: 172.18.18.1
+  backend_s:
+    ports:
+      - "0.0.0.0:3000:3000"
+    container_name: backend_c
+    restart: always
+    build: ./backend/
+    env_file: ./config/backend.env
+    environment:
+      - NODE_ENV=stage
+  cron_s:
+    ports:
+      - "0.0.0.0:3003:3003"
+    container_name: cron_c
+    restart: always
+    build: ./cronBackend/
+    env_file: ./config/cron.env
+    environment:
+      - NODE_ENV=stage  
+    

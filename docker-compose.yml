@@ -1,14 +1,14 @@
 version: "2.0"
 services:
-  redis:
-    container_name: redis_c
-    ports:
-      - '6379:6379'
-    volumes: 
-      - ./data:/data
-    image: redis
-    environment:
-      - REDIS_REPLICATION_MODE=master
+  # redis:
+  #   container_name: redis_c
+  #   ports:
+  #     - '6379:6379'
+  #   volumes: 
+  #     - ./data:/data
+  #   image: redis
+  #   environment:
+  #     - REDIS_REPLICATION_MODE=master
   backend_s:
     ports:
       - "0.0.0.0:3000:3000"

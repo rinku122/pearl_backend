@@ -11,7 +11,7 @@ services:
       - REDIS_REPLICATION_MODE=master
   backend_s:
     ports:
-      - "0.0.0.0:3000:3000"
+      - "0.0.0.0:3001:3001"
     container_name: backend_c
     restart: always
     build: ./backend/

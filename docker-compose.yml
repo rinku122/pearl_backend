@@ -5,7 +5,7 @@ services:
     ports:
       - '6379:6379'
     volumes: 
-      - ./data:/data
+      - "/data/dvolumes/trx100/docker-redis:/data"
     image: redis
     environment:
       - REDIS_REPLICATION_MODE=master

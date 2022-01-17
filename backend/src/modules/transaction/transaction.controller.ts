@@ -17,7 +17,6 @@ class TransactionController implements Interfaces.Controller {
     this.router
       .all(`${this.path}/*`)
 
-      .get(this.path + "/getAll/:userAddress", this.getAll)
       .get(this.path + "/registeredPerDay", this.registeredPerDay)
       .get(this.path + "/getTotal", this.getTotal)
       .get(this.path + "/getEURValue", this.getEURValue)
@@ -36,28 +35,7 @@ class TransactionController implements Interfaces.Controller {
       .get(this.path + "/directReferralUsers/:address", this.directReferralUsers);
   }
 
-  //Get Transactions
-  private async getAll(req: any, response: Response) {
-    const { userAddress } = req.params;
-    if (userAddress) {
-      try {
-        const records: any = await Transaction.getAll(userAddress, req.query);
-        if (records.status) {
-          return Responses.success(response, {
-            status: true,
-            data: records.data,
-          });
-        } else {
-          return Responses.success(response, {
-            status: false,
-            message: records.message,
-          });
-        }
-      } catch (error) {
-        return Responses.error(response, { message: error });
-      }
-    }
-  }
+
 
   //Get Transactions
   private async registeredPerDay(req: any, response: Response) {

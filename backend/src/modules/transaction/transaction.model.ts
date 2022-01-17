@@ -73,33 +73,6 @@ class Transaction extends BaseModel {
   }
 
   /**
-   * get all transactions
-   * @param userAddress
-   */
-  public async getAll(userAddress: string, urlQuery: any) {
-    return new Promise(async (resolve, reject) => {
-      let query = `SELECT * FROM transactions WHERE userAddress='${userAddress}'`;
-      if (urlQuery.level) {
-        query += ` AND level='${urlQuery.level}'`;
-      }
-      if (urlQuery.matrix) {
-        query += ` AND matrix='${urlQuery.matrix}'`;
-      }
-
-      query += ` ORDER BY id DESC`;
-      try {
-        const records: any = await this.callQuerys(query);
-        if (records.length > 0) {
-          resolve({ status: true, data: records });
-        } else {
-          resolve({ status: false, message: "No record found" });
-        }
-      } catch (error) {
-        resolve(error);
-      }
-    });
-  }
-  /**
    * Insert Transaction
    * @param data
    */
@@ -123,15 +96,9 @@ class Transaction extends BaseModel {
                 transactionType='${data.transactionType}';`;
 
       try {
-        // console.log('request query', query);
-        const result: any = await this.callQuery(query);
-        if (result) {
-          resolve({ status: true, id: result.insertId });
-        } else {
-          resolve({ status: false, message: API_MSG.SQL_QUERY_ERROR });
-        }
+        resolve({ status: true});
       } catch (error) {
-        resolve({ status: false, message: error.sqlMessage });
+        resolve({ status: false });
       }
     });
   }
@@ -155,34 +122,6 @@ class Transaction extends BaseModel {
     });
   }
 
-  /**
-   * get all transactions total
-   * @param
-   */
-  public async getTotal() {
-    return new Promise(async (resolve, reject) => {
-      const query = `SELECT sum(amount) as total FROM transactions WHERE message='success'`;
-      try {
-        const query2 = `SELECT eur  FROM currencyData WHERE currency='ether'`;
-        const records2: any = await this.callQuerys(query2);
-
-        const eur: any = records2[0].eur;
-
-        const records: any = await this.callQuerys(query);
-        if (records.length > 0) {
-          records[0].total += 200;
-          resolve({
-            ether: records[0].total,
-            eur: parseInt((eur * records[0].total).toString()),
-          });
-        } else {
-          resolve({ ether: 0, eur: 0 });
-        }
-      } catch (error) {
-        resolve(error);
-      }
-    });
-  }
 
   public async getTotalLogs() {
     return new Promise(async (resolve, reject) => {

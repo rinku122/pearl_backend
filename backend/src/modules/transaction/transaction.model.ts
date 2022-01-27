@@ -16,7 +16,7 @@ import {
 } from "./schema";
 
 const TronWeb = require("tronweb");
-
+import abi from "./../../bin/myContractABI.json";
 class Transaction extends BaseModel {
   public TRONGRID_API = process.env.TRONGRID_API!;
   public tronWeb: any;
@@ -44,32 +44,19 @@ class Transaction extends BaseModel {
   }
   //calling the contract
   private async callContract() {
-    return new Promise((resolve, reject) => {
+    try {
       if (this.myContractOb) {
-        resolve(this.myContractOb);
+        return this.myContractOb;
       } else {
-        this.tronWeb
-          .contract()
-          .at(this.contractAddress)
-          .then((contract: any) => {
-            this.myContractOb = contract;
-
-            resolve(this.myContractOb);
-          })
-          .catch((err: any) => {
-            console.log(err.message, "first contract");
-            if (err.message === "Request failed with status code 503") {
-              this.tronWeb
-                .contract()
-                .at(this.contractAddress)
-                .then(resolve)
-                .catch(reject);
-            } else {
-              reject(err);
-            }
-          });
+        this.myContractOb = await this.tronWeb.contract(
+          abi,
+          this.contractAddress
+        );
+        return this.myContractOb;
       }
-    });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   /**
@@ -96,7 +83,7 @@ class Transaction extends BaseModel {
                 transactionType='${data.transactionType}';`;
 
       try {
-        resolve({ status: true});
+        resolve({ status: true });
       } catch (error) {
         resolve({ status: false });
       }
@@ -122,7 +109,6 @@ class Transaction extends BaseModel {
     });
   }
 
-
   public async getTotalLogs() {
     return new Promise(async (resolve, reject) => {
       try {
@@ -138,7 +124,7 @@ class Transaction extends BaseModel {
         const contract: any = await this.callContract();
         contract
           .totalIncome()
-          .call()
+          .call({ _isConstant: true })
           .then(async (result: any) => {
             let r: any = await this.convertFromSun(result);
             r = parseFloat(r);
@@ -253,7 +239,7 @@ class Transaction extends BaseModel {
         const contract: any = await this.callContract();
         contract
           .idToAddress(id)
-          .call()
+          .call({ _isConstant: true })
           .then((result: any) => {
             console.log("Result", result);
             resolve(result);
@@ -290,7 +276,7 @@ class Transaction extends BaseModel {
         const contract: any = await this.callContract();
         contract
           .users(address)
-          .call()
+          .call({ _isConstant: true })
           .then(async (result: any) => {
             const user = {
               id: result.id.toString(),
@@ -308,7 +294,7 @@ class Transaction extends BaseModel {
             if (err.message === "Request failed with status code 503") {
               contract
                 .users(address)
-                .call()
+                .call({ _isConstant: true })
                 .then(async (result: any) => {
                   const user = {
                     id: result.id.toString(),
@@ -326,7 +312,7 @@ class Transaction extends BaseModel {
                   if (err.message === "Request failed with status code 503") {
                     contract
                       .users(address)
-                      .call()
+                      .call({ _isConstant: true })
                       .then(async (result: any) => {
                         const user = {
                           id: result.id.toString(),
@@ -526,7 +512,9 @@ class Transaction extends BaseModel {
       address = await this.convertAddressToHex(address);
       address = address.replace("41", "0x");
       console.log("address", address);
-      const response = await contract.investmentValues().call();
+      const response = await contract
+        .investmentValues()
+        .call({ _isConstant: true });
       let arrayInstring: any = [];
       for (let i = 0; i < response.length; i++) {
         arrayInstring.push(Number(response[i].toString()));

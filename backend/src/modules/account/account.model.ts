@@ -4,7 +4,7 @@ import BaseModel from "../../model/base.model";
 import { API_MSG } from "../../constant/response";
 // import Web3 from 'tronweb';
 import * as TransactionSchema from "../transaction/schema";
-
+import abi from "./../../bin/myContractABI.json";
 const TronWeb = require("tronweb");
 const myContract = require("../../bin/myContractABI.json");
 // const myContractLive = require('../../bin/myContractLive.json');
@@ -30,7 +30,19 @@ class Account extends BaseModel {
     );
   }
   private async callContract() {
-    return await this.tronWeb.contract().at(this.contractAddress);
+    try {
+      if (this.myContractOb) {
+        return this.myContractOb;
+      } else {
+        this.myContractOb = await this.tronWeb.contract(
+          abi,
+          this.contractAddress
+        );
+        return this.myContractOb;
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
   // public async UserPoolIncome(address: string) {
   //     return new Promise(async (resolve, reject) => {
@@ -61,7 +73,7 @@ class Account extends BaseModel {
         const contract = await this.callContract();
         contract
           .currentUserId()
-          .call()
+          .call({ _isConstant: true })
           .then((res: any) => {
             let d = 0;
             if (parseInt(res) > 0) {
@@ -72,6 +84,7 @@ class Account extends BaseModel {
           })
           .catch(reject);
       } catch (error) {
+        console.log(error);
         reject(error);
       }
     });
